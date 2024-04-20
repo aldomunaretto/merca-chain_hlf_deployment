@@ -123,19 +123,44 @@ Para los peers, la configuración de registros requiere una salida detallada que
 ![peer0,org1](img/hlf09.png)
 ![peer0,org2](img/hlf10.png)
 
+### Integración de Hardware Security Module (HSM) con Fabric CA en Merca-chain
+Como parte de los esfuerzos para mejorar la seguridad en la red 'Merca-chain', se implementó un Hardware Security Module (HSM) simulado utilizando SoftHSM2, el cual posee soporte para el protocolo PKCS#11. Este paso es fundamental para aumentar la protección de las claves criptográficas usadas dentro de la red. En el proceso de integrar HSM con las CAs de Hyperledger Fabric, se realizaron ajustes específicos en los archivos de configuración y se añadieron archivos especializados para cada organización y los orderers.
 
+#### Procedimiento de Integración
+##### Reconstrucción de la Imagen de Fabric CA:
+Dado que las imágenes predeterminadas de Fabric CA no incluyen soporte para PKCS#11, fue necesario reconstruir las imágenes para agregar esta funcionalidad. Los pasos seguidos para realizar esta tarea fueron:
 
------------------------------------------------------------
-apartado 4
+Clonar el repositorio de Fabric CA:
+```bash 
+git clone https://github.com/hyperledger/fabric-ca.git
+cd fabric-ca
+```
+Reconstruir las imágenes con soporte PKCS#11 ejecutando desde la raíz de fabric-ca, especificando la versión de Ubuntu adecuada para poder tener compatibilidad con los tokens que generaremos en el host, asi como el soporte al protocolo PKCS#11.
+```bash 
+make docker UBUNTU_VER=22.04 GO_TAGS=pkcs11
+```
+##### Configuración de SoftHSM2
+Se ejecutaron los siguientes comandos para inicializar tokens para cada CA:
+```bash 
 export SOFTHSM2_CONF=/etc/softhsm2.conf
 
 sudo softhsm2-util --init-token --slot 0 --label ca_orderer --so-pin 1234 --pin 1234
 sudo softhsm2-util --init-token --slot 1 --label ca_org1 --so-pin 1234 --pin 1234
 sudo softhsm2-util --init-token --slot 2 --label ca_org2 --so-pin 1234 --pin 1234
+```
+Estos comandos establecen un token para cada CA que Hyperledger Fabric utilizará, con etiquetas y pines específicos para cada una, mejorando así la seguridad de las claves criptográficas.
 
-git clone https://github.com/hyperledger/fabric-ca.git
+##### Configuración de la Red
+Se realizaron los ajustes necesarios en el archivo `compose-ca.yaml` para integrar el HSM fueron:
 
-make docker UBUNTU_VER=22.04 GO_TAGS=pkcs11
+- Establecer FABRIC_CA_HOME para definir el directorio donde Fabric CA buscará su configuración y almacenará materiales criptográficos.
+- Utilizar SOFTHSM2_CONF para indicar la ubicación del archivo de configuración del HSM en el contenedor.
+- En la sección __volumes__, montar el directorio HOME de la CA a la carpeta local correspondiente a cada organización o orderer, permitiendo acceso externo a los archivos generados por la CA.
+![directorio](img/hlf11.png)
+- Además, como parte de la configuración segura de HSM, se añadieron archivos específicos `fabric-ca-server-config.yaml` y `softhsm2.conf` en la estructura de directorios de cada organización y orderer dentro de la red. Estos archivos se personalizaron para cada entidad para reflejar las necesidades y políticas de seguridad individuales de cada uno.
+- Montar la carpeta conteniendo los tokens del HSM, asegurándose de que las rutas coincidan con las especificadas en `softhsm2.conf`.
+- Montar la librería de SoftHSM2 dentro del contenedor.
+
 
 ------------------------------------------------------------
 apartado 5
