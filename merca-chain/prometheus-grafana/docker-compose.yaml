@@ -35,7 +35,7 @@ services:
     restart: always
 
   cadvisor:
-    image: google/cadvisor:latest # gcr.io/cadvisor/cadvisor:latest for ios
+    image: gcr.io/cadvisor/cadvisor:latest
     privileged: true
     container_name: cadvisor
     volumes:

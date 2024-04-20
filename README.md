@@ -97,6 +97,36 @@ chmod +x scripts/packageCC.sh
 
 
 la dos cerrar la llave en la linea 89 del chaincode (assetTransfer.js)
+--------------------------------------------------------
+# export SOFTHSM2_CONF=/home/ubuntu/merca-chain_hlf_deployment/hsm-config/softhsm2.conf
+
+sudo softhsm2-util --init-token --slot 0 --label ca_orderer --so-pin 1234 --pin 1234
+sudo softhsm2-util --init-token --slot 1 --label ca_org1 --so-pin 1234 --pin 1234
+sudo softhsm2-util --init-token --slot 2 --label ca_org2 --so-pin 1234 --pin 1234
+
+git clone https://github.com/hyperledger/fabric-ca.git
+
+make docker UBUNTU_VER=22.04 GO_TAGS=pkcs11
+
+<!-- 
+
+fabric-ca-client register -d --id.name merca-admin --id.secret merka-12345 --id.type client --id.attrs '"hf.Registrar.Roles=peer,client"' --id.affiliation org1.department1
 
 
+export FABRIC_CA_CLIENT_HOME=/home/ubuntu/merca-chain_hlf_deployment/merca-chain/hsm-config -->
+export SOFTHSM2_CONF=/etc/softhsm2.conf
 
+./network.sh deployCC -ccn merca-chaincode -ccl javascript -ccv 1.0.0 -ccp ../merca-chaincode
+
+sudo ../bin/fabric-ca-client enroll -u https://admin:adminpw@localhost:7054
+
+sudo ../bin/fabric-ca-client register -d --id.name merca-admin --id.secret merka-12345 --id.type client --id.attrs '"hf.Registrar.Roles=peer,client"' --id.affiliation org1.department1
+
+
+export FABRIC_CA_CLIENT_HOME=/home/ubuntu/merca-chain_hlf_deployment/merca-chain/organizations/peerOrganizations/org1.example.com/
+
+sudo ../bin/fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-org1 --tls.certfiles "${PWD}/organizations/fabric-ca/org1/ca-cert.pem"
+
+sudo ../bin/fabric-ca-client register -d -u https://localhost:7054 --caname ca-org1 --id.name merca-admin --id.secret merka-12345 --id.type client --id.attrs '"hf.Registrar.Roles=peer,client"' --id.affiliation org1.department1 --tls.certfiles "${PWD}/organizations/fabric-ca/org1/ca-cert.pem"
+
+sudo ../bin/fabric-ca-client register -d -u https://localhost:7054 --caname ca-org1 --id.name merca-admin --id.secret merka-12345 --id.type client --id.attrs '"hf.Registrar.Roles=peer,client"' --id.affiliation org1.department1 --tls.certfiles "${PWD}/organizations/fabric-ca/org1/ca-cert.pem"
