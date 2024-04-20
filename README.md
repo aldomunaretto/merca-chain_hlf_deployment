@@ -111,7 +111,19 @@ Finalmente detuvimos y volvimos a levantar tanto la red como el chaincode con lo
 La configuración eficiente del registro (logging) es vital para el monitoreo, la depuración y la auditoría en cualquier red de blockchain empresarial. Merca-link ha expresado la necesidad de mejorar la calidad y la estructura de los registros de la red 'Merca-chain', especificando requisitos precisos para los registros de los orderers y los peers. A continuación, se detallan los ajustes implementados en el archivo `compose-test-net.yaml`, tal como se refleja en las imágenes adjuntas, y cómo estos cumplen con las necesidades establecidas por Merca-link.
 
 #### Cambios en el Logging de los Orderers:
+De acuerdo a la actividad estos registros deben estar en formato JSON y lo mismo se cumplió modificando la configuración de entorno del servicio de orderer en el archivo `compose-test-net.yaml`.
 ![orderer](img/hlf08.png)
+
+#### Cambios en el Logging de los Peers:
+Para los peers, la configuración de registros requiere una salida detallada que incluya la fecha y la hora al final de cada entrada de registro, además de un nivel de registro ajustado. Los cambios realizados se describen a continuación:
+
+- Se ha configurado el formato de registro para incluir la fecha y hora pero al final de cada registro, es decir, posterior al mensaje que refleja el mismo.
+- Para la fase de pruebas, se ha establecido un nivel de registro por defecto de DEBUG para ambos peers, asi como para los loggers específicos de gossip y chaincode, se han establecido niveles de WARNING e INFO, respectivamente.
+
+![peer0,org1](img/hlf09.png)
+![peer0,org2](img/hlf10.png)
+
+
 
 -----------------------------------------------------------
 apartado 4
