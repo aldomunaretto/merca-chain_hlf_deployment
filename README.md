@@ -78,28 +78,39 @@ Aqui podemos ver que se muestra que no consigue el fichero en la ruta
 ```bash
 /var/hyperledger/orderer/tls/servre.crt
 ```
-De aquí podemos observar 
-se modificó en el fichero compose-test-net.yaml la linea 42 (41 del fichero original) cambiando servre.crt por server.crt
+De aquí podemos observar que el nombre del fichero esta incorrectamente escrito. Para solucionarlo se modificó en el fichero compose-test-net.yaml la linea 42 (41 del fichero original) cambiando servre.crt por server.crt
 
-
+En segundo lugar el Peer de la Organización 1:
 ```bash 
 docker logs peer0.org1.example.com
 ```
 ![docker logs 2](img/hlf05.png)
 
+En este caso podmeos determinar que el problema esta en un par de letras cambiadas en el ruta al fichero server.bey. Para solucionarlo, se modificó en el fichero compose-test-net.yaml la linea 91 (89 del fichero original) cambiando /hypreledger/fabric por /hyperledger/fabric.
 
-se modificó en el fichero compose-test-net.yaml la linea 91 (89 del fichero  original) cambiando /hypreledger/fabric por /hypelredger/fabric
+> NOTA: la numeración corresponde con la actual del fichero, al cual se ha añandido lineas para las atender a las actividades posteriores. Coloco entre parentesis la linea correspondiente al fichero original.
 
-NOTA: la numeración corresponde con la actual del fichero, al cual se ha añandido lineas para las atender a las actividades posteriores. Coloco entre parentesis la linea correpsondiente al fichero original.
+### Despliegue del Chaincode "merca-chaincode"
+Durante el proceso de despliegue del chaincode "merca-chaincode" en la red 'Merca-chain', se encontró que, aunque el ciclo de vida del chaincode completaba satisfactoriamente, el chaincode no operaba como se esperaba. Tras ejecutar el comando para levantar el chaincode:
 
-----------------------------------------------------------
-
+```bash 
 ./network.sh deployCC -ccn merca-chaincode -ccl javascript -ccv 1.0.0 -ccp ../merca-chaincode
+```
+Se observó que los contenedores de los chaincodes se encontraban caídos. 
 
-la dos cerrar la llave en la linea 89 del chaincode (assetTransfer.js)
+![chaincodes caidos](img/hlf06.png)
+
+Una inspección inmediata de los registros del contenedor reveló un error crítico en el archivo assetTransfer.js, específicamente en la línea 92, donde se encontró un SyntaxError: Unexpected identifier. Esta es una indicación clara de un error de programación en el script del chaincode.
+
+![error chaincode](img/hlf07.png)
+
+Al revisar el archivo assetTransfer.js, se descubrió que el error se debía a una llave de cierre ausente en el método `CreateAsset`.
+Finalmente detuvimos y volvimos a levantar tanto la red como el chaincode con los comandos antes utilizados. Con estos pasos, el chaincode "merca-chaincode" se desplegó correctamente, y todos los contenedores operaron de manera estable.
+
+
 
 -----------------------------------------------------------
-
+apartado 4
 export SOFTHSM2_CONF=/etc/softhsm2.conf
 
 sudo softhsm2-util --init-token --slot 0 --label ca_orderer --so-pin 1234 --pin 1234
@@ -111,6 +122,7 @@ git clone https://github.com/hyperledger/fabric-ca.git
 make docker UBUNTU_VER=22.04 GO_TAGS=pkcs11
 
 ------------------------------------------------------------
+apartado 5
 
 export FABRIC_CA_CLIENT_HOME=/home/ubuntu/merca-chain_hlf_deployment/merca-chain/organizations/peerOrganizations/org1.example.com/
 

@@ -26,6 +26,7 @@ bin/
 builders/
 config/
 external-chaincode/
+fabric-ca/
 install-fabric.sh
 
 # override the ignore of all config/ folders
