@@ -107,7 +107,11 @@ Una inspección inmediata de los registros del contenedor reveló un error crít
 Al revisar el archivo assetTransfer.js, se descubrió que el error se debía a una llave de cierre ausente en el método `CreateAsset`.
 Finalmente detuvimos y volvimos a levantar tanto la red como el chaincode con los comandos antes utilizados. Con estos pasos, el chaincode "merca-chaincode" se desplegó correctamente, y todos los contenedores operaron de manera estable.
 
+### Ajustes de Logging en la Red 'Merca-chain' de Hyperledger Fabric
+La configuración eficiente del registro (logging) es vital para el monitoreo, la depuración y la auditoría en cualquier red de blockchain empresarial. Merca-link ha expresado la necesidad de mejorar la calidad y la estructura de los registros de la red 'Merca-chain', especificando requisitos precisos para los registros de los orderers y los peers. A continuación, se detallan los ajustes implementados en el archivo `compose-test-net.yaml`, tal como se refleja en las imágenes adjuntas, y cómo estos cumplen con las necesidades establecidas por Merca-link.
 
+#### Cambios en el Logging de los Orderers:
+![orderer](img/hlf08.png)
 
 -----------------------------------------------------------
 apartado 4
