@@ -323,7 +323,7 @@ Utilizando los dashboards proporcionados por la actividad, los merca-ingenieros 
 
 ![dashboard2](img/hlf22.png)
 
-Adicionalmente se creo un nuevo dashboard de nombre Merca-Chain Performances Review, partiendo de metricas de los dos anterioes y algunaotra que conisderamos interesante,el cual se importa desde el fichero `merca-chain_performances_review.json` (el cual se encuentra en la misma carpeta de los otros dashboards) y del cual pueden ver un pantallazo a continuación:
+Adicionalmente se creo un nuevo dashboard de nombre Merca-Chain Performances Review, partiendo de metricas de los dos anteriores y alguna otra que consideramos interesante, el cual se importa desde el fichero `merca-chain_performances_review.json` (se encuentra en la misma carpeta de los otros dashboards) y del cual pueden ver un pantallazo a continuación:
 
 ![dashboard modificado](img/hlf23.png)
 
