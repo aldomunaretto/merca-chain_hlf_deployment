@@ -322,3 +322,108 @@ Utilizando los dashboards proporcionados por la actividad, los merca-ingenieros 
 ![dashboard1](img/hlf21.png)
 
 ![dashboard2](img/hlf22.png)
+
+Adicionalmente se creo un nuevo dashboard de nombre Merca-Chain Performances Review, partiendo de metricas de los dos anterioes y algunaotra que conisderamos interesante,el cual se importa desde el fichero `merca-chain_performances_review.json` (el cual se encuentra en la misma carpeta de los otros dashboards) y del cual pueden ver un pantallazo a continuación:
+
+![dashboard modificado](img/hlf23.png)
+
+#### Referencias
+1. __HLF Metrics Reference__: https://hyperledger-fabric.readthedocs.io/en/latest/metrics_reference.html
+1. __Grafana Dashboard for monitoring Blockchain Hyperledger__: https://medium.com/@srpillai/grafana-dashboard-for-monitoring-blockchain-hyperledger-8402555c6d37
+1. __HyperLedger__: https://github.com/sujithrpillai/hyperledger
+1. __Hyperledger Fabric Monitoring dashboard for Grafana with Prometheus__: https://www.youtube.com/watch?v=zZqMQbcXwZM
+1. __Monitoring Fabric Network using Grafana and Prometheus__: https://medium.com/geekculture/monitoring-fabric-network-using-grafana-and-prometheus-78572bd883e7
+1. __Hyperledger Fabric v2.X Monitoring Using Prometheus__: https://medium.com/coinmonks/hyperledger-fabric-v2-x-monitoring-using-prometheus-974e433073f5
+1. __HLF_GrafanaDashBoard__: https://github.com/SamYuan1990/HLF_GrafanaDashBoard
+
+### Recomendaciones para el Despliegue Distribuido de Hyperledger Fabric (HLF) en Merka-link
+
+Desplegar Hyperledger Fabric (HLF) en distintos nodos es esencial para lograr una red de blockchain descentralizada y resistente. Existen varias estrategias y herramientas que permiten distribuir los componentes de HLF en múltiples nodos físicos o virtuales. Cada enfoque tiene sus propias características y es adecuado para diferentes escenarios. Aquí detallamos las opciones disponibles:
+
+#### Despliegue Multihost Tradicional
+Esta opción involucra la instalación manual de los componentes de HLF en diferentes máquinas host. Cada nodo de la red, como los peers, orderers y Certificate Authorities (CAs), se instala y configura individualmente en distintos servidores que pueden estar ubicados en diferentes centros de datos o regiones geográficas.
+
+Ventajas:
+
+- Control completo sobre la configuración de cada nodo.
+- Flexibilidad en la elección del proveedor de infraestructura o hardware.
+
+Desventajas:
+
+- Proceso de configuración y mantenimiento más complejo y propenso a errores.
+- Requiere un conocimiento profundo de la red y sus componentes.
+
+#### Contenedores Docker y Docker Swarm
+Utilizar Docker para contenerizar los servicios de HLF y Docker Swarm para su orquestación es una forma de simplificar el despliegue en múltiples hosts. Docker Swarm permite administrar un clúster de Docker hosts y ejecutar contenedores distribuidos en ellos.
+
+Ventajas:
+
+- Facilita el escalado de servicios y la recuperación de fallos.
+- Menor sobrecarga operativa en comparación con los despliegues multihost tradicionales.
+
+Desventajas:
+
+- Puede ser menos adecuado para redes blockchain grandes o con requisitos complejos de rendimiento y seguridad.
+- Docker Swarm es menos popular en comparación con Kubernetes, lo que puede afectar el soporte y la integración comunitaria.
+
+#### Kubernetes
+Kubernetes es una plataforma de orquestación de contenedores que ha ganado mucha tracción en la comunidad de HLF debido a su robustez y capacidades de gestión. Permite desplegar los componentes de HLF en contenedores distribuidos y gestionar su ciclo de vida con facilidad.
+
+Ventajas:
+
+- Alta disponibilidad, escalabilidad automática y gestión de configuración centralizada.
+- Amplia comunidad de usuarios y un ecosistema de herramientas de soporte.
+
+Desventajas:
+
+- La curva de aprendizaje puede ser pronunciada para los equipos que no están familiarizados con Kubernetes.
+- Configurar una red HLF en Kubernetes puede requerir una comprensión detallada de ambos sistemas.
+
+#### Plataformas como Servicio (PaaS)
+Algunos proveedores de servicios en la nube ofrecen Hyperledger Fabric como un servicio. Estas plataformas PaaS se encargan del despliegue y la gestión de la infraestructura, permitiendo a los usuarios concentrarse en el desarrollo de aplicaciones de blockchain.
+
+Ventajas:
+
+- Despliegue rápido y gestión simplificada de la red.
+- Soporte y mantenimiento proporcionado por el proveedor.
+
+Desventajas:
+
+- Menor control sobre la infraestructura subyacente.
+- Posibles limitaciones en la personalización debido a las abstracciones del proveedor.
+
+#### Herramientas Especializadas
+Existen herramientas y marcos de trabajo diseñados específicamente para desplegar redes HLF. Estos incluyen proyectos como Hyperledger Cello, que proporciona un sistema de gestión de blockchain como servicio, facilitando el despliegue, operación y escalamiento de redes HLF.
+
+Ventajas:
+
+- Proporcionan una interfaz de usuario amigable y flujos de trabajo optimizados para la gestión de redes HLF.
+- Automatización de tareas operativas y monitorización integrada.
+
+Desventajas:
+
+- Dependencia de herramientas de terceros para la operación de la red.
+- Necesidad de adaptarse a la lógica y restricciones específicas de las herramientas utilizadas.
+
+#### Recomendaciones para Merka-link
+- Evaluar Requisitos Específicos: Merka-link debe evaluar sus necesidades específicas de rendimiento, seguridad y disponibilidad para elegir la estrategia más adecuada.
+- Capacitación y Expertise: Es importante asegurar o desarrollar la experiencia interna necesaria para manejar la estrategia de despliegue elegida.
+- Gestión de Configuración y Seguridad: Independientemente del enfoque, la gestión de la configuración y las prácticas de seguridad robustas son esenciales.
+- Soporte a Largo Plazo: Seleccionar soluciones con soporte a largo plazo y una comunidad activa puede ayudar a garantizar la sostenibilidad de la red.
+- Integración con Herramientas Existentes: Las herramientas de monitorización y operaciones deben integrarse sin problemas con la solución de despliegue seleccionada.
+
+#### Referencias
+
+1. __Deploying a production network__: https://hyperledger-fabric.readthedocs.io/en/latest/deployment_guide_overview.html
+1. __The Pre-Requisites for Deploying Hyperledger Fabric in Production__: https://medium.com/debutinfotech/the-pre-requisites-for-deploying-hyperledger-fabric-in-production-66469250b5d0
+1. __Scalable Distributed Hyperledger Fabric__: https://encyclopedia.pub/entry/24927
+1. __Setup Hyperledger Fabric in multiple physical machines__: https://blog.1950labs.com/setup-hyperledger-fabric-in-multiple-physical-machines-d8f3710ed9b4
+1. __Multi-Host Deployment for First Network (Hyperledger Fabric v2)__: https://kctheservant.medium.com/multi-host-deployment-for-first-network-hyperledger-fabric-v2-273b794ff3d
+1. __Hyperledger Fabric - Multihost Deployment v2.2__: https://www.youtube.com/playlist?list=PLSBNVhWU6KjXDTwJlk8vI80kJy-rDG7JY
+1. __Deploying a Multi-Node Hyperledger Fabric Network in 5 Steps__: https://www.altoros.com/blog/deploying-a-multi-node-hyperledger-fabric-network-in-5-steps/
+1. __Hyperledger fabric multi-host docker swarm setup__: https://www.youtube.com/watch?v=NHuHfnT6WSM
+1. __hyperledger-fabric-docker-swarm__: https://github.com/saurabhsingh121/hyperledger-fabric-docker-swarm
+1. __4host-swarm__: https://github.com/kctam/4host-swarm
+1. __How to deploy a Hyperledger fabric network on Kubernetes?__: https://www.zeeve.io/blog/how-to-deploy-a-hyperledger-fabric-network-on-kubernetes/
+1. __hlf-k8s__: https://github.com/Substra/hlf-k8s
+1. __Hyperledger Cello__: https://www.hyperledger.org/projects/cello
