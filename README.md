@@ -161,12 +161,41 @@ Se realizaron los ajustes necesarios en el archivo `compose-ca.yaml` para integr
 - Montar la carpeta conteniendo los tokens del HSM, asegurándose de que las rutas coincidan con las especificadas en `softhsm2.conf`.
 - Montar la librería de SoftHSM2 dentro del contenedor.
 
+### Configuración y Uso del Fabric-CA-Client con SoftHSM
+Para utilizar esta configuración segura, fue necesario reconstruir el binario local de `fabric-ca-client` para incluir soporte PKCS#11. Una vez reconstruido, se procedió a registrar un usuario administrativo, denominado merca-admin, utilizando el cliente CA actualizado.
 
-------------------------------------------------------------
-apartado 5
+#### Procedimiento de Configuración
+##### Reconstrucción del Binario:
+Clonación y acceso al repositorio de `fabric-ca`:
+```bash 
+git clone https://github.com/hyperledger/fabric-ca.git
+cd fabric-ca
+```
+Reconstrucción del binario del `fabric-ca-client` con soporte para PKCS#11:
+```bash 
+make fabric-ca-client GO_TAGS=pkcs11
+```
+Tras reconstruir el binario, se localizó el nuevo `fabric-ca-client` en la carpeta bin del directorio `fabric-ca` y se movio a la carpeta de binarios de la raíz de el repositorio de la actividad.
 
+#### Registro de Usuario con Fabric-CA-Client y SoftHSM
+##### Inscripción y Registro de Usuario
+Utilizando el binario reconstruido, se inscribió el usuario `admin` y luego se registró el usuario `merca-admin` con la capacidad de registrar nuevos clientes y peers. Los comandos utilizados fueron:
+Se configuró el entorno para el `fabric-ca-client` especificando la ubicación del directorio de trabajo para la organización:
+```bash 
 export FABRIC_CA_CLIENT_HOME=/home/ubuntu/merca-chain_hlf_deployment/merca-chain/organizations/peerOrganizations/org1.example.com/
-
+```
+Ingresar al servidor de la CA y enrolar el administrador con el siguiente comando:
+```bash 
 sudo ../bin/fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-org1 --tls.certfiles "${PWD}/organizations/fabric-ca/org1/ca-cert.pem"
+```
+![enroll](img/hlf12.png)
 
+Registrar al usuario `merca-admin` con las credenciales y atributos correspondientes:
+```bash 
 sudo ../bin/fabric-ca-client register -d -u https://localhost:7054 --caname ca-org1 --id.name merca-admin --id.secret merka-12345 --id.type client --id.attrs '"hf.Registrar.Roles=peer,client"' --id.affiliation org1.department1 --tls.certfiles "${PWD}/organizations/fabric-ca/org1/ca-cert.pem"
+```
+Este procedimiento completó con éxito el registro del usuario administrativo `merca-admin` en la red 'Merca-chain' como se puede apreciar en la imagen a continuación:
+
+![merca-admin](img/hlf13.png)
+
+En los comandos mostrados anteriormente se incluyeron elementos como la __url__ y la __caname__ para evitar el uso del fichero de configuración `fabric-ca-client-config.yaml`.
