@@ -63,11 +63,11 @@ Finalmente para desplegar la red utilizamos el comando:
 ./network.sh up createChannel -ca
 ```
 
-De aqui la primera parte de la actividad era detectar y corregir la razón por la quie algunos de los contenedores no se levantan correctamente.
+De aqui, la primera parte de la actividad era detectar y corregir la razón por la quie algunos de los contenedores no se levantan correctamente.
 
 ![peer0.org1](img/hlf02.png)
 
-Lo primero que observamos fue este mensaje de error el cual indica la imposibilidad de unir el peer de la organización 1 al canal `mychannel`. con lo cual procedimos a revisar si los contenedores estaban funcionando adecuadamente. Para ello utilizamos el comando:
+Lo primero que observamos fue este mensaje de error el cual indica la imposibilidad de unir el peer de la organización 1 al canal `mychannel`, con lo cual procedimos a revisar si los contenedores estaban funcionando adecuadamente. Para ello utilizamos el comando:
 
 ```bash 
 docker ps -a
@@ -93,7 +93,7 @@ Aqui podemos ver que se muestra que no consigue el fichero en la ruta:
 /var/hyperledger/orderer/tls/servre.crt
 ```
 
-De aquí podemos observar que el nombre del fichero esta incorrectamente escrito. Para solucionarlo se modificó en el fichero compose-test-net.yaml la linea 42 (41 del fichero original) cambiando servre.crt por server.crt
+Se observa que el nombre del fichero esta incorrectamente escrito. Para solucionarlo se modificó en el fichero `compose-test-net.yaml` la linea 42 (41 del fichero original) cambiando __servre.crt__ por __server.crt__
 
 En segundo lugar el Peer de la Organización 1:
 
@@ -103,7 +103,7 @@ docker logs peer0.org1.example.com
 
 ![docker logs 2](img/hlf05.png)
 
-En este caso podmeos determinar que el problema esta en un par de letras cambiadas en el ruta al fichero server.key. Para solucionarlo, se modificó en el fichero compose-test-net.yaml la linea 91 (89 del fichero original) cambiando _/hypreledger/fabric_ por _/hyperledger/fabric_.
+En este caso determinamos que el problema está en un par de letras cambiadas en el ruta al fichero server.key. Para solucionarlo, se modificó en el fichero `compose-test-net.yaml` la linea 91 (89 del fichero original) cambiando __/hypreledger/fabric__ por __/hyperledger/fabric__.
 
 >NOTA: la numeración corresponde con la actual del fichero, al cual se ha añandido lineas para las atender a las actividades posteriores. Coloco entre parentesis la linea correspondiente al fichero original.
 
@@ -118,11 +118,15 @@ Se observó que los contenedores de los chaincodes se encontraban caídos.
 
 ![chaincodes caidos](img/hlf06.png)
 
-Una inspección inmediata de los registros del contenedor reveló un error crítico en el archivo assetTransfer.js, específicamente en la línea 92, donde se encontró un SyntaxError: Unexpected identifier. Esta es una indicación clara de un error de programación en el script del chaincode.
+Una inspección inmediata de los registros del contenedor reveló un error crítico en el archivo `assetTransfer.js`, específicamente en la línea 92, donde se encontró el sigueinte error:
+```js
+SyntaxError: Unexpected identifier
+```
+Esta es una indicación clara de un error de programación en el script del chaincode.
 
 ![error chaincode](img/hlf07.png)
 
-Al revisar el archivo assetTransfer.js, se descubrió que el error se debía a una llave de cierre ausente en el método `CreateAsset`.
+Al revisar el archivo `assetTransfer.js`, se descubrió que el error se debía a una llave de cierre ausente en el método `CreateAsset`.
 
 Finalmente detuvimos y volvimos a levantar tanto la red como el chaincode con los comandos antes utilizados. Con estos pasos, el chaincode "merca-chaincode" se desplegó correctamente, y todos los contenedores operaron de manera estable.
 
@@ -190,7 +194,7 @@ Se realizaron los ajustes necesarios en el archivo `compose-ca.yaml` para integr
 - Montar la librería de __SoftHSM2__ dentro del contenedor.
 
 ### Configuración y Uso del Fabric-CA-Client con SoftHSM
-Para utilizar esta configuración segura, fue necesario reconstruir el binario local de `fabric-ca-client` para incluir soporte PKCS#11. Una vez reconstruido, se procedió a registrar un usuario administrativo, denominado merca-admin, utilizando el cliente CA actualizado.
+Para utilizar esta configuración segura, fue necesario reconstruir el binario local de `fabric-ca-client` para incluir soporte `PKCS#11`. Una vez reconstruido, se procedió a registrar un usuario administrativo, denominado __merca-admin__, utilizando el cliente CA actualizado.
 
 #### Procedimiento de Configuración
 ##### Reconstrucción del Binario:
@@ -207,7 +211,7 @@ Reconstrucción del binario del `fabric-ca-client` con soporte para __PKCS#11__:
 make fabric-ca-client GO_TAGS=pkcs11
 ```
 
-Tras reconstruir el binario, se localizó el nuevo `fabric-ca-client` en la carpeta bin del directorio `fabric-ca` y se movio a la carpeta de binarios de la raíz de el repositorio de la actividad.
+Tras reconstruir el binario, se localizó el nuevo `fabric-ca-client` en la carpeta bin del directorio `fabric-ca` y se movio a la carpeta de binarios de la raíz del repositorio de la actividad.
 
 #### Registro de Usuario con Fabric-CA-Client y SoftHSM
 ##### Inscripción y Registro de Usuario
@@ -233,7 +237,7 @@ Registrar al usuario `merca-admin` con las credenciales y atributos correspondie
 sudo ../bin/fabric-ca-client register -d -u https://localhost:7054 --caname ca-org1 --id.name merca-admin --id.secret merka-12345 --id.type client --id.attrs '"hf.Registrar.Roles=peer,client"' --id.affiliation org1.department1 --tls.certfiles "${PWD}/organizations/fabric-ca/org1/ca-cert.pem"
 ```
 
-Este procedimiento completó con éxito el registro del usuario administrativo `merca-admin` en la red 'Merca-chain' como se puede apreciar en la imagen a continuación:
+Este procedimiento completó con éxito el registro del usuario administrativo __merca-admin__ en la red 'Merca-chain' como se puede apreciar en la imagen a continuación:
 
 ![merca-admin](img/hlf13.png)
 
